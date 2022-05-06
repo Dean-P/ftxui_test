@@ -151,14 +151,14 @@ void consequence_game()
 
   auto set_size = [](ftxui::Element elem, int dimx, int dimy)
   {
-    return elem | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, dimx) | ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, dimy);
+    return std::move(elem | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, dimx) | ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, dimy));
   };
 
   auto make_box = [&set_size](std::string title, std::string content, int dimx, int dimy) {
     return set_size(
       ftxui::window(
-        ftxui::text(title) | ftxui::hcenter,
-        ftxui::text(content) | ftxui::hcenter | ftxui::dim
+        std::move(ftxui::text(title) | ftxui::hcenter),
+        std::move(ftxui::text(content) | ftxui::hcenter | ftxui::dim)
       ),
       dimx,
       dimy
