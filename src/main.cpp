@@ -96,7 +96,10 @@ void consequence_game()
 {
   auto screen = ftxui::ScreenInteractive::TerminalOutput();
 
-  GameBoard<3, 3> gb;
+  static constexpr int board_width = 3;
+  static constexpr int board_height = 3;
+
+  GameBoard<board_width, board_height> gb;
 
   std::string moves_text;
 
@@ -107,6 +110,8 @@ void consequence_game()
 
   const auto make_buttons = [&] {
     std::vector<ftxui::Component> buttons;
+
+    //auto option = ftxui::ButtonOption::Animated();
 
     for (std::size_t x = 0; x < gb.width; ++x) {
       for (std::size_t y = 0; y < gb.height; ++y) {
@@ -161,11 +166,15 @@ void consequence_game()
   };
 
   auto make_layout = [&] {
+
+    static constexpr int elem_width = 15;
+    static constexpr int elem_height = 3;
+
     std::vector<ftxui::Element> rows;
 
     std::size_t idx = 0;
 
-    rows.push_back(ftxui::hbox({ make_box("", "Lights Out", 15, 3) }));
+    rows.push_back(ftxui::hbox({ make_box("", "Lights Out", elem_width, elem_height) }));
 
     for (std::size_t x = 0; x < gb.width; ++x) {
       std::vector<ftxui::Element> row;
@@ -176,7 +185,7 @@ void consequence_game()
       rows.push_back(ftxui::hbox(std::move(row)));
     }
 
-    rows.push_back(ftxui::hbox({ make_box("Moves", moves_text, 15, 3) }));
+    rows.push_back(ftxui::hbox({ make_box("Moves", moves_text, elem_width, elem_height) }));
     
     ftxui::FlexboxConfig config;
     config.direction = ftxui::FlexboxConfig::Direction::Row;
@@ -186,7 +195,7 @@ void consequence_game()
     config.align_content = ftxui::FlexboxConfig::AlignContent::FlexStart;
 
     auto button_group = ftxui::flexbox({ reset_button->Render(), quit_button->Render() }, config);
-    button_group = button_group | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 15);
+    button_group = button_group | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, elem_width);
     button_group = hbox(button_group, ftxui::filler());
     
     rows.push_back(button_group);
@@ -217,7 +226,7 @@ int main(int argc, const char **argv)
           intro
           intro (-h | --help)
           intro --version
- Options:
+  Options:
           -h --help     Show this screen.
           --version     Show version.
 )";
